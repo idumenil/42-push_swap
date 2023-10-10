@@ -1,20 +1,29 @@
 NAME = push_swap
-
+ARCHIVE = push_swap.a
 CC = gcc
+CFLAGS = -Wall -Werror -Wextra
+MAKE_LIB = ar -rcs
 
-FLAGS = -Wall -Wextra -Werror
-
-SRCS = main.c
-
+SRCS = $(wildcard *.c)
 OBJS = $(SRCS:.c=.o)
 
-all: $(NAME)
+all : $(NAME)
 
-$(NAME): $(SRCS)
-	$(CC) $(FLAGS) -o $(NAME) $(SRCS)
+$(NAME) : $(ARCHIVE)
+	$(CC) $< -o $@
 
-clean:
-	rm -f $(OBJS)
+$(ARCHIVE) : $(OBJS)
+	$(MAKE_LIB) $(ARCHIVE) $^
 
-fclean:
+%.o : %.c 
+	$(CC) $(CFLAGS) -c $< -o $@ 
+	
+clean :
+	rm -f $(OBJS) $(ARCHIVE)
+
+fclean : clean
 	rm -f $(NAME)
+
+re : fclean all
+
+.PHONY : all clean fclean re
